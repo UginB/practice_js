@@ -14862,6 +14862,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var modals = function modals() {
+  function hide(selector) {
+    document.querySelector(selector).style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
   function bindModal(modalSelector, triggerSelector, closeClass) {
     var modal = document.querySelector(modalSelector),
         trigger = document.querySelectorAll(triggerSelector);
@@ -14877,8 +14882,7 @@ var modals = function modals() {
     });
     modal.addEventListener('click', function (e) {
       if (e.target === modal || e.target.classList.contains(closeClass) || e.target.parentElement.classList.contains(closeClass)) {
-        modal.style.display = 'none';
-        document.body.style.overflow = '';
+        hide(modalSelector);
       }
     });
   }
@@ -14894,6 +14898,8 @@ var modals = function modals() {
   bindModal('.popup', '.phone_link', "popup_close");
   showModalByTimer('.popup', 60000);
   bindModal('.popup_calc', '.glazing_price_btn', "popup_calc_close");
+  bindModal(".popup_calc_profile", ".popup_calc_button", "popup_calc_profile_close");
+  bindModal(".popup_calc_end", ".popup_calc_profile_button", "popup_calc_end_close");
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (modals);
@@ -14918,29 +14924,41 @@ var tabs = function tabs() {
     var tabsItem = document.querySelectorAll(tabsItemSelector),
         tabsContent = document.querySelectorAll(tabsContentSelector);
     tabsItem.forEach(function (tab, i) {
-      tab.addEventListener('click', function (e) {
-        tabsItem.forEach(function (item) {
-          if (item.lastElementChild) {
-            item.lastElementChild.classList.remove(activeClass);
-          } else {
-            item.lastElementChild.classList.remove(activeClass);
-          }
+      if (tabsItem[0].classList.contains(activeClass)) {
+        tab.addEventListener('click', function (e) {
+          tabsItem.forEach(function (item, num) {
+            item.classList.remove(activeClass);
+
+            if (num == i) {
+              item.classList.add(activeClass);
+            }
+          });
+          tabsContent.forEach(function (item, num) {
+            item.style.display = 'none';
+
+            if (num == i) {
+              item.style.display = 'block';
+            }
+          });
         });
+      } else {
+        tab.addEventListener('click', function (e) {
+          tabsItem.forEach(function (item, num) {
+            item.lastElementChild.classList.remove(activeClass);
 
-        if (tab.lastElementChild) {
-          tab.lastElementChild.classList.add(activeClass);
-        } else {
-          tab.classList.add(activeClass);
-        }
+            if (num == i) {
+              item.lastElementChild.classList.add(activeClass);
+            }
+          });
+          tabsContent.forEach(function (item, num) {
+            item.style.display = 'none';
 
-        tabsContent.forEach(function (item, num) {
-          item.style.display = 'none';
-
-          if (num == i) {
-            item.style.display = 'flex';
-          }
+            if (num == i) {
+              item.style.display = 'block';
+            }
+          });
         });
-      });
+      }
     });
   }
 

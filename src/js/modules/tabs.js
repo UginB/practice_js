@@ -4,27 +4,39 @@ const tabs = ()=>{
               tabsContent = document.querySelectorAll(tabsContentSelector);
         
         tabsItem.forEach((tab, i)=>{
-            tab.addEventListener('click', (e)=>{
-                tabsItem.forEach(item=>{
-                    if (item.lastElementChild){
-                        item.lastElementChild.classList.remove(activeClass); 
-                    } else {
-                        item.lastElementChild.classList.remove(activeClass); 
-                    }
-                });
-                if (tab.lastElementChild) {
-                    tab.lastElementChild.classList.add(activeClass);
-                } else {
-                    tab.classList.add(activeClass);
-                }
+            if (tabsItem[0].classList.contains(activeClass)) {
+                tab.addEventListener('click', (e)=>{
+                    tabsItem.forEach((item, num)=>{
+                        item.classList.remove(activeClass);
+                        if (num == i) {
+                            item.classList.add(activeClass);
+                        }
+                    });
 
-                tabsContent.forEach((item, num)=>{
-                    item.style.display = 'none';
-                    if (num == i) {
-                        item.style.display = 'flex';
-                    }
+                    tabsContent.forEach((item, num)=>{
+                        item.style.display = 'none';
+                        if (num == i) {
+                            item.style.display = 'block';
+                        }
+                    });
                 });
-            });
+            } else {
+                tab.addEventListener('click', (e)=>{
+                    tabsItem.forEach((item, num)=>{
+                        item.lastElementChild.classList.remove(activeClass);
+                        if (num == i) {
+                            item.lastElementChild.classList.add(activeClass);
+                        }
+                    });
+
+                    tabsContent.forEach((item, num)=>{
+                        item.style.display = 'none';
+                        if (num == i) {
+                            item.style.display = 'block';
+                        }
+                    });
+                });
+            }
         });
     }
 
