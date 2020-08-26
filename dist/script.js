@@ -14838,12 +14838,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _slider__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./slider */ "./src/js/slider.js");
 /* harmony import */ var _modules_modals__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/modals */ "./src/js/modules/modals.js");
 /* harmony import */ var _modules_tabs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/tabs */ "./src/js/modules/tabs.js");
+/* harmony import */ var _modules_timer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/timer */ "./src/js/modules/timer.js");
+
 
 
 
 window.addEventListener('DOMContentLoaded', function () {
   Object(_modules_modals__WEBPACK_IMPORTED_MODULE_1__["default"])();
   Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])();
+  Object(_modules_timer__WEBPACK_IMPORTED_MODULE_3__["default"])(".sale", '2020-12-18');
 });
 
 /***/ }),
@@ -14862,14 +14865,15 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var modals = function modals() {
-  function hide(selector) {
-    document.querySelector(selector).style.display = 'none';
-    document.body.style.overflow = '';
-  }
-
   function bindModal(modalSelector, triggerSelector, closeClass) {
     var modal = document.querySelector(modalSelector),
         trigger = document.querySelectorAll(triggerSelector);
+
+    function hide(selector) {
+      document.querySelector(selector).style.display = 'none';
+      document.body.style.overflow = '';
+    }
+
     trigger.forEach(function (item) {
       item.addEventListener('click', function (e) {
         if (e.target) {
@@ -14895,8 +14899,8 @@ var modals = function modals() {
   }
 
   bindModal('.popup_engineer', '.popup_engineer_btn', "popup_close");
-  bindModal('.popup', '.phone_link', "popup_close");
-  showModalByTimer('.popup', 60000);
+  bindModal('.popup', '.phone_link', "popup_close"); // showModalByTimer('.popup', 60000);
+
   bindModal('.popup_calc', '.glazing_price_btn', "popup_calc_close");
   bindModal(".popup_calc_profile", ".popup_calc_button", "popup_calc_profile_close");
   bindModal(".popup_calc_end", ".popup_calc_profile_button", "popup_calc_end_close");
@@ -14968,6 +14972,68 @@ var tabs = function tabs() {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (tabs);
+
+/***/ }),
+
+/***/ "./src/js/modules/timer.js":
+/*!*********************************!*\
+  !*** ./src/js/modules/timer.js ***!
+  \*********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+var timer = function timer(id, deadLine) {
+  function getTimeRemaining(endtime) {
+    var t = Date.parse(endtime) - Date.parse(new Date()),
+        days = Math.floor(t / (1000 * 60 * 60 * 24)),
+        hours = Math.floor(t / (1000 * 60 * 60) % 24),
+        minutes = Math.floor(t / 1000 / 60 % 60),
+        seconds = Math.floor(t / 1000 % 60);
+    return {
+      'total': t,
+      'days': days,
+      'hours': hours,
+      'minutes': minutes,
+      'seconds': seconds
+    };
+  }
+
+  function getZero(num) {
+    if (num >= 0 && num < 10) {
+      return "0".concat(num);
+    } else {
+      return num;
+    }
+  }
+
+  function setClock(selector, endtime) {
+    var timer = document.querySelector(selector),
+        days = timer.querySelector('#days'),
+        hours = timer.querySelector('#hours'),
+        minutes = timer.querySelector('#minutes'),
+        seconds = timer.querySelector('#seconds'),
+        timeInterval = setInterval(updateClock, 1000);
+    updateClock();
+
+    function updateClock() {
+      var t = getTimeRemaining(endtime);
+      days.innerHTML = getZero(t.days);
+      hours.innerHTML = getZero(t.hours);
+      minutes.innerHTML = getZero(t.minutes);
+      seconds.innerHTML = getZero(t.seconds);
+
+      if (t.total <= 0) {
+        clearInterval(timeInterval);
+      }
+    }
+  }
+
+  setClock(id, deadLine);
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (timer);
 
 /***/ }),
 
